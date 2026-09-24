@@ -3,3 +3,4 @@ __pycache__/
 *.egg-info/
 recordings/
 dist/
+.DS_Store
