@@ -18,6 +18,23 @@ uv tool install git+https://github.com/Benny93/laya-browser   # or: git clone â€
 
 The first English selector downloads the model (`aac6fef/laya-mlx`, ~800 MB) from Hugging Face.
 
+### Behind a TLS-intercepting proxy (`invalid peer certificate: UnknownIssuer`)
+
+Corporate proxies re-sign HTTPS with their own root CA. It lives in the macOS keychain, which uv and Python don't read by default.
+
+1. **Installing:** tell uv to use the system certificates:
+   ```bash
+   uv tool install --system-certs git+https://github.com/Benny93/laya-browser   # or: export UV_SYSTEM_CERTS=1
+   ```
+2. **Downloading the model:** the Hugging Face client (`CERTIFICATE_VERIFY_FAILED`) needs a CA bundle file. Export the keychain roots once and point Python at it. The laya-browser daemon inherits these variables from the shell that starts it.
+   ```bash
+   security find-certificate -a -p /Library/Keychains/System.keychain \
+     /System/Library/Keychains/SystemRootCertificates.keychain > ~/.ca-bundle.pem
+   export SSL_CERT_FILE=~/.ca-bundle.pem REQUESTS_CA_BUNDLE=~/.ca-bundle.pem  # add to ~/.zshrc
+   ```
+
+Or download the model once with those variables set (`hf download aac6fef/laya-mlx`). After that it loads from the local cache.
+
 ## Usage
 
 ```bash
