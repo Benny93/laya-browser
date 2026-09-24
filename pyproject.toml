@@ -27,4 +27,4 @@ build-backend = "hatchling.build"
 only-include = ["laya_browser.py"]
 
 [tool.hatch.build.targets.sdist]
-exclude = ["docs/*.mp4", "recordings/"]
+exclude = ["docs/", "recordings/"]

@@ -4,9 +4,9 @@
 
 `laya-browser` accepts every agent-browser command and passes it through unchanged. When a selector is English (`click "log in"`) instead of a `@ref` or CSS, a local [Laya](https://github.com/NandhaKishorM/laya) typed-decision model (via [laya-mlx](https://github.com/mizorewww/laya-mlx)) picks the matching element from the page snapshot. The agent skips the snapshot → read → pick-ref round-trip, and there's no LLM call or token cost.
 
-[![agent-browser + local LLM vs laya-browser, wikiracing side by side](docs/sidebyside.png)](docs/sidebyside.mp4)
+![agent-browser + local LLM vs laya-browser, wikiracing side by side](docs/sidebyside.gif)
 
-*Wikiracing Rubber duck → Albert Einstein with links only. Left: agent-browser with Qwen3-30B-A3B (local Ollama, thinking off) choosing links, **26.3 s / 9 steps**. Right: laya-browser, **3.1 s / 5 steps**. [Watch the video](docs/sidebyside.mp4).*
+*Wikiracing Rubber duck → Albert Einstein with links only. Left: agent-browser with Qwen3-30B-A3B (local Ollama, thinking off) choosing links, **26.3 s / 9 steps**. Right: laya-browser, **3.1 s / 5 steps**.*
 
 ## Install
 
@@ -49,7 +49,7 @@ A background daemon keeps the model loaded. It starts on first use (~1 s) and ex
 ```bash
 uv sync
 uv run python wikirace.py                 # 5 wikiracing tasks, local Laya only
-uv run python sidebyside.py [task] [ollama-model]  # records docs/sidebyside.mp4 (needs Ollama + ffmpeg)
+uv run python sidebyside.py [task] [ollama-model]  # records docs/sidebyside.gif (needs Ollama + ffmpeg)
 ```
 
 Wikiracing tasks follow [jev-for-chrome](https://github.com/chy4pro/jev-for-chrome)'s e2e format. Laya makes each decision over 50–730 links in ~50–300 ms. On route quality it reached **2 of 5** targets within 14 steps: it follows topical similarity and doesn't plan a route. See [benchmarks-wikirace.md](benchmarks-wikirace.md).

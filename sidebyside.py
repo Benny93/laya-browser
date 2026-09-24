@@ -1,7 +1,7 @@
 """Side-by-side video: agent-browser driven by a local LLM (Ollama) vs laya-browser, same wikirace.
 
     python sidebyside.py ["Rubber duck -> Albert Einstein"] [ollama-model]
-Writes docs/sidebyside.mp4. Runs sequentially so the two models never share the GPU.
+Writes docs/sidebyside.gif. Runs sequentially so the two models never share the GPU.
 """
 
 import json
@@ -55,10 +55,13 @@ def main():
     # pad the shorter clip with its last frame so both run to the end, then stack horizontally
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", LLM_WEBM, "-i", LAYA_WEBM,
                     "-filter_complex", "[0:v]scale=960:-2,tpad=stop=-1:stop_mode=clone[a];"
-                    "[1:v]scale=960:-2,tpad=stop=-1:stop_mode=clone[b];[a][b]hstack=shortest=0[v]",
-                    "-map", "[v]", "-t", str(duration(LLM_WEBM, LAYA_WEBM)),
-                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "docs/sidebyside.mp4"], check=True)
-    print("wrote docs/sidebyside.mp4")
+                    "[1:v]scale=960:-2,tpad=stop=-1:stop_mode=clone[b];[a][b]hstack=shortest=0,"
+                    f"trim=duration={duration(LLM_WEBM, LAYA_WEBM)},"  # tpad is endless; palettegen needs an end
+                    # 960 px / 8 fps / 96-colour palette keeps a ~30 s race around 3 MB
+                    "fps=8,scale=960:-2:flags=lanczos,split[c][d];[c]palettegen=max_colors=96[p];"
+                    "[d][p]paletteuse=dither=bayer:bayer_scale=4[v]",
+                    "-map", "[v]", "docs/sidebyside.gif"], check=True)
+    print("wrote docs/sidebyside.gif")
 
 
 def duration(*videos):
