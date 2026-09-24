@@ -13,7 +13,7 @@
 Requires Apple Silicon, macOS 14+, Python 3.11+, and [agent-browser](https://github.com/vercel-labs/agent-browser) on `PATH`.
 
 ```bash
-uv tool install git+https://github.com/<owner>/laya-browser   # or: git clone … && uv tool install --editable .
+uv tool install git+https://github.com/Benny93/laya-browser   # or: git clone … && uv tool install --editable .
 ```
 
 The first English selector downloads the model (`aac6fef/laya-mlx`, ~800 MB) from Hugging Face.
