@@ -163,18 +163,22 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "laya-mlx", git = "https://github.com/mizorewww/laya-mlx" }]
+requires-dist = [{ name = "laya-mlx", specifier = ">=0.2,<0.3" }]
 
 [[package]]
 name = "laya-mlx"
 version = "0.2.0"
-source = { git = "https://github.com/mizorewww/laya-mlx#0a859518634112655cb97c745dbf04f5191aaf13" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "huggingface-hub" },
     { name = "mlx", marker = "platform_machine == 'arm64' and sys_platform == 'darwin'" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "tokenizers" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4c/4c/2b67e41023ee51bf06af9ac4fb4a2b2e015cc3e8af7d779a989fb2332991/laya_mlx-0.2.0.tar.gz", hash = "sha256:d51c2366c3bbccaa1aee87862728b9b51704547ffce5027de37e44756fbf8251", size = 53854, upload-time = "2026-09-22T06:02:22.566Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/21/89b7f030fcbfb6327f1fc553480fbeaa2aae7408338ee422c2cf37746e66/laya_mlx-0.2.0-py3-none-any.whl", hash = "sha256:1a80a0cc79c55be808de0b1208a172566209b5780d796b98d86235e9cf335187", size = 63524, upload-time = "2026-09-22T06:02:20.61Z" },
 ]
 
 [[package]]

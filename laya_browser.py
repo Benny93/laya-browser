@@ -64,7 +64,7 @@ def serve():
         def handle(self):
             req = json.loads(self.rfile.readline())
             try:
-                resp = rank(agent, req["target"], req["elements"])
+                resp = rank(agent, req["target"], req["elements"], req.get("state"), req.get("ask"), req.get("fuzzy", True))
             except Exception as e:  # keep the daemon alive on bad input
                 resp = {"error": str(e)}
             self.wfile.write(json.dumps(resp).encode() + b"\n")
@@ -80,12 +80,14 @@ def serve():
     os.unlink(SOCK)
 
 
-def rank(agent, target, elements):
-    """Pick the element best matching target. elements: [(ref, role, name)]."""
+def rank(agent, target, elements, state=None, ask=None, fuzzy=True):
+    """Pick the element best matching target. elements: [(ref, role, name)]. state/ask override the prompt."""
     labels = {}
     for ref, role, name in elements:
         if role not in SKIP_ROLES:
             labels.setdefault(f'{role} "{name}"' if name else role, ref)  # duplicates keep first
+    if not labels:
+        raise ValueError("no candidate elements on the page")
     norm = lambda t: re.sub(r"[^a-z0-9]", "", t.lower())
     want = norm(target)
     names_raw = {label: label.partition('"')[2].lower() for label in labels}
@@ -94,15 +96,15 @@ def rank(agent, target, elements):
     words = set(re.findall(r"[a-z0-9]+", target.lower()))
     hits = (
         [label for label, n in names.items() if n == want]
-        or [label for label, n in names.items() if len(want) >= 3 and want in n]
+        or [label for label, n in names.items() if fuzzy and len(want) >= 3 and want in n]
         # every word of the name appears in the target: "large pizza" -> radio "Large"
-        or [label for label in labels if set(re.findall(r"[a-z0-9]+", names_raw[label])) <= words and names[label]]
+        or [label for label in labels if fuzzy and set(re.findall(r"[a-z0-9]+", names_raw[label])) <= words and names[label]]
     )
     if len(hits) == 1 or (hits and names[hits[0]] == want):
         return {"ref": labels[hits[0]], "label": hits[0], "confidence": 1.0}
 
-    state = f"The user wants to: {target}"
-    ask = "Which interactive page element accomplishes the user's goal?"
+    state = state or f"The user wants to: {target}"
+    ask = ask or "Which interactive page element accomplishes the user's goal?"
     pool = list(labels)
     # tournament: all chunks go in one batched predict, winners race again until one remains
     while len(pool) > 1:

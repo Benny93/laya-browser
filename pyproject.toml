@@ -1,9 +1,20 @@
 [project]
 name = "laya-browser"
 version = "0.1.0"
-description = "agent-browser drop-in with local Laya-MLX natural-language element targeting"
+description = "agent-browser drop-in with on-device natural-language element targeting via Laya-MLX"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Benjamin Vollmer" }]
 requires-python = ">=3.11"
-dependencies = ["laya-mlx @ git+https://github.com/mizorewww/laya-mlx"]
+keywords = ["agent-browser", "browser-automation", "ai-agents", "mlx", "laya", "apple-silicon"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Operating System :: MacOS",
+  "Programming Language :: Python :: 3",
+  "Topic :: Internet :: WWW/HTTP :: Browsers",
+]
+dependencies = ["laya-mlx>=0.2,<0.3"]
 
 [project.scripts]
 laya-browser = "laya_browser:main"
@@ -12,5 +23,8 @@ laya-browser = "laya_browser:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.metadata]
-allow-direct-references = true
+[tool.hatch.build.targets.wheel]
+only-include = ["laya_browser.py"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["docs/*.mp4", "recordings/"]

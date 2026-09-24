@@ -1,0 +1,11 @@
+laya-browser
+Copyright 2026 laya-browser contributors
+
+laya-browser drives agent-browser (https://github.com/vercel-labs/agent-browser) and
+runs Laya decision models through laya-mlx (https://github.com/mizorewww/laya-mlx),
+both installed separately. Laya and its pretrained weights are by Convai Innovations
+and Laya contributors (https://github.com/NandhaKishorM/laya), Apache-2.0. Weights are
+downloaded from Hugging Face on first use and are not included in this repository.
+
+The wikiracing task format and the Rubber duck -> Eiffel Tower and Coffee -> Espresso
+tasks follow jev-for-chrome's e2e suite (https://github.com/chy4pro/jev-for-chrome).
